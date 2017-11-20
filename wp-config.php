@@ -17,25 +17,35 @@
  *
  * @package WordPress
  */
+ 
+// Set your environment/url pairs
+$environments = array(
+  'local'       => 'localhost',
+  'staging'     => 'staging.known-development.com/git_test',
+  'production'  => 'git_test.com'
+);
 
-// ** MySQL settings ** //
-/** The name of the database for WordPress */
-define( 'DB_NAME', 'git_test' );
+// Get the hostname
+$http_host = $_SERVER['HTTP_HOST'];
+// Loop through $environments to see if there’s a match
+foreach($environments as $environment => $hostname) {
+  if (stripos($http_host, $hostname) !== FALSE) {
+    define('ENVIRONMENT', $environment);
+    break;
+  }
+}
 
-/** MySQL database username */
-define( 'DB_USER', 'root' );
-
-/** MySQL database password */
-define( 'DB_PASSWORD', '' );
-
-/** MySQL hostname */
-define( 'DB_HOST', '127.0.0.1' );
-
-/** Database Charset to use in creating database tables. */
-define( 'DB_CHARSET', 'utf8' );
-
-/** The Database Collate type. Don't change this if in doubt. */
-define( 'DB_COLLATE', '' );
+// Exit if ENVIRONMENT is undefined
+if (!defined('ENVIRONMENT')) exit('No database configured for this host');
+// Location of environment-specific configuration
+$wp_db_config = 'wp-config/wp-db-' . ENVIRONMENT . '.php'; 
+// Check to see if the configuration file for the environment exists
+if (file_exists(__DIR__ . '/' . $wp_db_config)) { 
+	require_once($wp_db_config); 
+} else { 
+	// Exit if configuration file does not exist
+	exit('No database configuration found for this host'); 
+}
 
 /**
  * Authentication Unique Keys and Salts.
