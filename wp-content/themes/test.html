@@ -1,3 +1,25 @@
-testing
+<!DOCTYPE html>
+<html>
+<body>
 
-NO FUN
+  <form method="get" id="form">
+    <textarea id="input"></textarea>
+    <input type="submit" value="submit" />
+  </form>
+  
+  
+  <script type="text/javascript">
+  var dataObj = [];
+  var reg = /href="[0-9a-zA-Z:/.\_-]+"/;
+  //var reg2 = /background-image\: url\([0-9a-zA-Z]+\)/;
+  var form = document.getElementById('form');
+  var input = document.getElementById('input');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var data = input.value;
+    var found = data.match(reg);
+    console.log(found);
+  });
+  </script>
+</body>
+</html>
